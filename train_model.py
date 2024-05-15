@@ -20,18 +20,19 @@ def train_single(num_epochs, num_batches,batch_size, model, optimizer, replay_bu
             loss.backward()
             optimizer.step()
 
+
 def train_model(model, replay_buffer, optimizer, num_epochs=500, batch_size=32):
     """
     Train a single model with supervised learning
     """
     idxs = np.array(range(len(replay_buffer)))
     num_batches = len(idxs) // batch_size
-    if isinstance(model, list):
-        # TODO START-Ensemble models
-        # Hint1: try different batch size for each model
-        # hint2: check out how we define optimizer and model for ensemble models. During training, each model should have their individual optimizer and batch size to increase diversity.
+    if not isinstance(model, list):
+        train_single(num_epochs, num_batches, batch_size, model, optimizer, replay_buffer)
 
-        # TODO END
-    else:
-        train_single(num_epochs, num_batches,batch_size, model, optimizer, replay_buffer)
+    # TODO START-Ensemble models
 
+    # Hint1: try different batch size for each model
+    # hint2: check out how we define optimizer and model for ensemble models. During training, each model should have their individual optimizer and batch size to increase diversity.
+
+    # TODO END
