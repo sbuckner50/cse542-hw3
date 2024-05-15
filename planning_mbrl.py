@@ -34,23 +34,20 @@ def plan_model_mppi(env, state, ac_size, horizon, model, reward_fn, n_samples_mp
     state_repeats = torch.from_numpy(np.repeat(state[None], n_samples_mpc, axis=0)).cuda()
     # Sampling random actions in the range of the action space
     random_actions = torch.FloatTensor(n_samples_mpc, horizon, ac_size).uniform_(env.action_space.low[0], env.action_space.high[0]).cuda().float()
-    if isinstance(model, list):
-        # Iterate through the models to compute average return over models
-        all_rewards_full = []
-        for curr_model in model:
-            # Rolling forward through the mdoel for horizon steps
-            all_states, all_reward_curr = rollout_model(curr_model, state_repeats, random_actions, horizon, reward_fn)
-            all_rewards_full.append(all_reward_curr[None])
-        # Averaging out returns over models
-        all_rewards = np.concatenate(all_rewards_full, axis=0).mean(axis=0)
-    else:
-        # Rolling forward through the mdoel for horizon steps
-        all_states, all_rewards = rollout_model(model, state_repeats, random_actions, horizon, reward_fn)
+    # Rolling forward through the mdoel for horizon steps
+    all_states, all_rewards = rollout_model(model, state_repeats, random_actions, horizon, reward_fn)
+    # TODO START-add ensemble MPPI
+    # Hint 1: check the type of model, if it's a list of networks, rollout each model and concatenate rewards for each model
+
+
+    # TODO END
+
+
 
     all_returns = all_rewards.sum(axis=-1)
     # Take first action from best trajectory
-    best_ac_idx = np.argmax(all_rewards.sum(axis=-1))
-    best_ac = random_actions[best_ac_idx, 0] # Take the first action from the best trajectory
+    # best_ac_idx = np.argmax(all_rewards.sum(axis=-1))
+    # best_ac = random_actions[best_ac_idx, 0] # Take the first action from the best trajectory
 
     # Run through a few iterations of MPPI
     for iter in range(n_iter_mppi):
@@ -81,7 +78,7 @@ def rollout_model(
     all_rewards = []
     curr_state = initial_states # Starting from the initial state
     for j in range(horizon):
-        # TODO START 
+        # TODO START
         # Hint1: concatenate current state and action pairs as the input for the model and predict the next observation
         # Hint2: get the predicted reward using reward_fn()
 

@@ -11,15 +11,11 @@ def train_single(num_epochs, num_batches,batch_size, model, optimizer, replay_bu
 
         for i in range(num_batches):
             optimizer.zero_grad()
-            # TODO START: training single model
-            # Hint: Sample from the replay buffer and supervise it using MSE loss between true next observation and predicted next observation
-
             t1_observations, t1_actions, _, t1_next_observations, _ = replay_buffer.sample(batch_size)
             oa_in = torch.cat([t1_observations, t1_actions], dim=-1)
 
             next_o_pred = model(oa_in)
             loss = loss_fn(next_o_pred, t1_next_observations)
-            # TODO END
 
             loss.backward()
             optimizer.step()
@@ -34,9 +30,7 @@ def train_model(model, replay_buffer, optimizer, num_epochs=500, batch_size=32):
         # TODO START-Ensemble models
         # Hint1: try different batch size for each model
         # hint2: check out how we define optimizer and model for ensemble models. During training, each model should have their individual optimizer and batch size to increase diversity.
-        for model_id, curr_model in enumerate(model):
-            batch_size_curr = batch_size + (model_id+1)*32 # use different batch size for each model
-            train_single(num_epochs, num_batches, batch_size_curr, curr_model, optimizer[model_id], replay_buffer)
+
         # TODO END
     else:
         train_single(num_epochs, num_batches,batch_size, model, optimizer, replay_buffer)
