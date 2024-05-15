@@ -1,6 +1,6 @@
 # Homework-3
 
-[WriteUp](https://mujoco.org/download/mujoco210-linux-x86_64.tar.g
+[WriteUp](https://github.com/WEIRDLabUW/cse542-sp24-hw3/blob/main/CSE_599_SP24.pdf)
 
 ## Setup and Installation
 
