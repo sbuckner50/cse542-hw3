@@ -1,4 +1,4 @@
-# Homework-3
+# Homework-3 Model Based RL
 
 [WriteUp](https://github.com/WEIRDLabUW/cse542-sp24-hw3/blob/main/CSE_599_SP24.pdf)
 
