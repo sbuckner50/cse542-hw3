@@ -1,5 +1,7 @@
 # Homework-3
 
+[WriteUp](https://mujoco.org/download/mujoco210-linux-x86_64.tar.g
+
 ## Setup and Installation
 
 ### Install MuJoCo
@@ -33,16 +35,12 @@ To set up the project environment, Use the `environment.yml` file. It contains t
 
 ## Training 
 
-    python main.py  --model_type single --plan_mode random
-    python main.py  --model_type single --plan_mode open_loop
     python main.py  --model_type single --plan_mode random_mpc
     python main.py  --model_type single --plan_mode mppi
     python main.py  --model_type ensemble --plan_mode mppi
 
 ## Evaluation 
 
-    python main.py  --model_type single --plan_mode random --test --render
-    python main.py  --model_type single --plan_mode open_loop --test --render
     python main.py  --model_type single --plan_mode random_mpc --test --render
     python main.py  --model_type single --plan_mode mppi --test --render
     python main.py  --model_type ensemble --plan_mode mppi --test --render
