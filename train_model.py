@@ -27,12 +27,12 @@ def train_model(model, replay_buffer, optimizer, num_epochs=500, batch_size=32):
     """
     idxs = np.array(range(len(replay_buffer)))
     num_batches = len(idxs) // batch_size
-
-    losses = []
-
-    if isinstance(model, list):
-        for model_id, curr_model in enumerate(model):
-            batch_size_curr = batch_size + (model_id + 1) * 32  # use different batch size for each model
-            train_single(num_epochs, num_batches, batch_size_curr, curr_model, optimizer[model_id], replay_buffer)
-    else:
+    if not isinstance(model, list):
         train_single(num_epochs, num_batches, batch_size, model, optimizer, replay_buffer)
+
+    # TODO START-Ensemble models
+
+    # Hint1: try different batch size for each model
+    # hint2: check out how we define optimizer and model for ensemble models. During training, each model should have their individual optimizer and batch size to increase diversity.
+
+    # TODO END

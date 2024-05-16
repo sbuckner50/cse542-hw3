@@ -35,9 +35,10 @@ def plan_model_mppi(env, state, ac_size, horizon, model, reward_fn, n_samples_mp
     # Sampling random actions in the range of the action space
     random_actions = torch.FloatTensor(n_samples_mpc, horizon, ac_size).uniform_(env.action_space.low[0], env.action_space.high[0]).cuda().float()
     # Rolling forward through the mdoel for horizon steps
-    all_states, all_rewards = rollout_model(model, state_repeats, random_actions, horizon, reward_fn)
+    if not isinstance(model, list):
+        all_states, all_rewards = rollout_model(model, state_repeats, random_actions, horizon, reward_fn)
     # TODO START-add ensemble MPPI
-    # Hint 1: check the type of model, if it's a list of networks, rollout each model and concatenate rewards for each model
+    # Hint 1: rollout each model and concatenate rewards for each model
 
 
     # TODO END
@@ -50,16 +51,16 @@ def plan_model_mppi(env, state, ac_size, horizon, model, reward_fn, n_samples_mp
     # best_ac = random_actions[best_ac_idx, 0] # Take the first action from the best trajectory
 
     # Run through a few iterations of MPPI
-    for iter in range(n_iter_mppi):
-        # TODO START-MPPI
-        # Hint1: Compute weights based on exponential of returns
-        # Hint2: sample actions based on the weight, and compute average return over models
-        # Hint3: if model type is a list, then implement ensemble mppi
+
+    # TODO START-MPPI
+    # Hint1: Compute weights based on exponential of returns
+    # Hint2: sample actions based on the weight, and compute average return over models
+    # Hint3: if model type is a list, then implement ensemble mppi
 
 
 
 
-        # TODO END
+    # TODO END
 
     # Finally take first action from best trajectory
     best_ac_idx = np.argmax(all_rewards.sum(axis=-1))
@@ -77,12 +78,12 @@ def rollout_model(
     all_states = []
     all_rewards = []
     curr_state = initial_states # Starting from the initial state
-    for j in range(horizon):
-        # TODO START
-        # Hint1: concatenate current state and action pairs as the input for the model and predict the next observation
-        # Hint2: get the predicted reward using reward_fn()
+    # TODO START
 
-        # TODO END
+    # Hint1: concatenate current state and action pairs as the input for the model and predict the next observation
+    # Hint2: get the predicted reward using reward_fn()
+
+    # TODO END
     all_states_full = torch.cat([state[:, None, :] for state in all_states], dim=1).cpu().detach().numpy()
     all_rewards_full = torch.cat(all_rewards, dim=-1).cpu().detach().numpy()    
     return all_states_full, all_rewards_full
@@ -182,13 +183,15 @@ def simulate_mbrl(env, model, plan_mode, num_epochs=200, max_path_length=200, mp
                   batch_size=100, num_agent_train_epochs_per_iter=1000, capacity=100000, num_traj_per_iter=100, gamma=0.99, print_freq=10, device = "cuda", reward_fn=None):
 
     # Set up optimizer and replay buffer
-    if isinstance(model, list):
-        optimizer = []
-        for model_id, curr_model in enumerate(model):
-            optimizer.append(optim.Adam(curr_model.parameters(), lr=(model_id+1)*1e-4)) # use separate optimizer and apply different learning rate to each model
-    else:
+    if not isinstance(model, list):
         optimizer = optim.Adam(model.parameters(), lr=1e-4)
-    replay_buffer = ReplayBuffer(obs_size = env.observation_space.shape[0], 
+
+    else:
+        print('Initialize separate optimizers for ensemble mbrl')
+        # TODO START
+        # Hint: try using separate optimizer with different learning rate for each model.
+        # TODO END
+    replay_buffer = ReplayBuffer(obs_size = env.observation_space.shape[0],
                                  action_size = env.action_space.shape[0], 
                                  capacity=capacity, 
                                  device=device)
