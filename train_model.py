@@ -34,16 +34,14 @@ def train_model(model, replay_buffer, optimizer, num_epochs=500, batch_size=32):
     # Hint1: try different batch size for each model
     # hint2: check out how we define optimizer and model for ensemble models. During training, each model should have their individual optimizer and batch size to increase diversity.
     else:
-        # exp = int(np.log2(batch_size))
-        # if len(model) % 2 == 0:
-        #     n = len(model) // 2
-        #     exps = np.linspace(-(n+1), n, len(model)) + exp
-        # else:
-        #     n = (len(model) - 1) // 2
-        #     exps = np.linspace(-n, n, len(model)) + exp
-        # batch_sizes = [int(2 ** exp) for exp in exps]
-        batch_sizes = np.linspace(250, 500, len(model), dtype=int)
-        np.random.shuffle(batch_sizes)
+        exp = int(np.log2(batch_size))
+        if len(model) % 2 == 0:
+            n = len(model) // 2
+            exps = np.linspace(-(n+1), n, len(model)) + exp
+        else:
+            n = (len(model) - 1) // 2
+            exps = np.linspace(-n, n, len(model)) + exp
+        batch_sizes = [int(2 ** exp) for exp in exps]
         for id,model_ in enumerate(model):
             batch_size = batch_sizes[id]
             num_batches = int(len(idxs) // batch_size)

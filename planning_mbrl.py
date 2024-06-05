@@ -225,8 +225,7 @@ def simulate_mbrl(env, model, plan_mode, num_epochs=200, max_path_length=200, mp
         # TODO START
         # Hint: try using separate optimizer with different learning rate for each model.
         optimizer = []
-        learning_rates = np.logspace(-4, -3, len(model))
-        np.random.shuffle(learning_rates)
+        learning_rates = np.logspace(-5, -3, len(model))
         for id,model_ in enumerate(model):
             optimizer_ = optim.Adam(model[id].parameters(), lr=learning_rates[id])
             optimizer.append(optimizer_)

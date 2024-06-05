@@ -17,4 +17,4 @@ plt.plot(range(len(rewards_emppi)), rewards_emppi, color='g', label='Ensemble MP
 plt.xlabel("Epoch")
 plt.ylabel("Reward")
 plt.legend()
-plt.savefig("rewards_comparison.pdf")
+plt.savefig("rewards_comparison.pdf", bbox_inches='tight')
